@@ -238,20 +238,74 @@ class Main extends LoginRequired {
             }
             return false;    
         }
-        print "<script type=\"text/javascript\">alert('fuck 1');</script>";
-        redirect('login');
         return false;
     }
     public function after_insert_callback($post_array,$primary_key) {
         //Fin transacción
         $this->db->trans_complete();
     }
-    public function avisos() {
-        $this->grocery_crud->set_table('Aviso');
-        $this->grocery_crud->set_subject('Avisos');
+    public function rol() {
+        $this->grocery_crud
+        ->set_table('rol')
+        ->columns('id','nombre')
+        ->fields('id','nombre')
+        ->field_type('id','readonly')
+        ->required_fields('nombre')
+        ;
+        $this->grocery_crud->set_subject('Rol');
         $output = $this->grocery_crud->render();
         $this->show((array)$output);
     }
+    public function permisos() {
+        $this->grocery_crud
+        ->set_table('usuario')
+        ->columns('id','username','roles')
+        ->required_fields('username','roles')
+        ->fields('id','username','roles')
+        ->field_type('id','readonly')
+        ->set_relation_n_n('roles','rol_usuario','rol','usuario_id','rol_id','nombre')
+        ->unset_add()
+        ;
+        $this->grocery_crud->set_subject('Rol');
+        $output = $this->grocery_crud->render();
+        $this->show((array)$output);
+    }
+
+    public function estado_pago() {
+        $this->grocery_crud
+        ->set_table('estado_pago')
+        ->columns('id','nombre')
+        ->fields('id','nombre')
+        ->field_type('id','readonly')
+        ->required_fields('nombre')
+        ;
+        $this->grocery_crud->set_subject('Estado de pago');
+        $output = $this->grocery_crud->render();
+        $this->show((array)$output);
+    }
+    public function periodo() {
+        $this->grocery_crud
+        ->set_table('periodo')
+        ->field_type('id','readonly')
+        ->required_fields('nombre','fecha_inicio','fecha_fin')
+        ;
+        $this->grocery_crud->set_subject('Periodo');
+        $output = $this->grocery_crud->render();
+        $this->show((array)$output);
+    }
+    public function asignatura() {
+        $this->grocery_crud
+        ->set_table('asignatura')
+        ->field_type('id','readonly')
+        ->required_fields('nombre')
+        ->unset_texteditor('descripcion')
+        ->set_relation_n_n('periodos','asignatura_en_periodo','periodo','asignatura_id','periodo_id','nombre')
+        ;
+        $this->grocery_crud->set_subject('Asignatura');
+        $output = $this->grocery_crud->render();
+        $this->show((array)$output);
+    }
+
     public function show($output=null) {
         $this->load->view('main',$output);
     }

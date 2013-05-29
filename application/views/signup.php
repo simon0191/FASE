@@ -48,6 +48,10 @@
             }
             ?>
         </div>
-        <?php include_once('templates/footer.php'); ?>
+        
     </body>
+    <footer>
+        <?php include_once('templates/footer.php'); ?>
+    </footer>
+    
 </html>
